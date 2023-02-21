@@ -3,11 +3,8 @@ using MediaToolkit.Options;
 using MediaToolkit;
 using System;
 using System.Collections.Generic;
-using ImageProcessor;
-using ImageProcessor.Imaging.Formats;
 using System.IO;
-using System.Drawing;
-using ImageProcessor.Imaging;
+using ImageMagick;
 
 namespace BTC_Prototype
 {
@@ -18,7 +15,7 @@ namespace BTC_Prototype
 			Directory.CreateDirectory("output");
 			Directory.CreateDirectory("text added");
 
-			var inputFile = new MediaFile { Filename = "..\\..\\testvideo.mkv" };
+			var inputFile = new MediaFile { Filename = "..\\..\\testvideo.mp4" };
 			int interval = 15;
 			List<string> FilePaths = new List<string>();
 
@@ -33,10 +30,103 @@ namespace BTC_Prototype
 				FilePaths.Add(outputFileName.Filename);
 			}
 
+			List<MagickReadSettings> listOfSettingsForText = new List<MagickReadSettings>();
+
+			var settingsTextOne = new MagickReadSettings
+			{
+				Font = "italic",
+				FillColor = MagickColors.ForestGreen,
+				StrokeColor = MagickColors.LimeGreen,
+				FontStyle = FontStyleType.Bold,
+				TextGravity = Gravity.Center,
+				BackgroundColor = MagickColors.Transparent,
+				Height = 250, // height of text box
+				Width = 200, // width of text box
+
+			};
+
+			listOfSettingsForText.Add(settingsTextOne);
+
+			var settingsTextTwo = new MagickReadSettings
+			{
+				Font = "italic",
+				FillColor = MagickColors.PaleGoldenrod,
+				StrokeColor = MagickColors.LimeGreen,
+				FontStyle = FontStyleType.Bold,
+				TextGravity = Gravity.Center,
+				BackgroundColor = MagickColors.Transparent,
+				Height = 250, // height of text box
+				Width = 200, // width of text box
+
+			};
+
+			listOfSettingsForText.Add(settingsTextTwo);
+
+			var settingsTextThree = new MagickReadSettings
+			{
+				Font = "italic",
+				FillColor = MagickColors.Orange,
+				StrokeColor = MagickColors.LimeGreen,
+				FontStyle = FontStyleType.Oblique,
+				TextGravity = Gravity.Center,
+				BackgroundColor = MagickColors.Transparent,
+				Height = 250, // height of text box
+				Width = 200, // width of text box
+
+			};
+
+			listOfSettingsForText.Add(settingsTextThree);
+
+			var settingsTextFour = new MagickReadSettings
+			{
+				Font = "italic",
+				FillColor = MagickColors.ForestGreen,
+				StrokeColor = MagickColors.LimeGreen,
+				FontStyle = FontStyleType.Bold,
+				TextGravity = Gravity.Center,
+				BackgroundColor = MagickColors.Transparent,
+				Height = 250, // height of text box
+				Width = 200, // width of text box
+
+			};
+
+			listOfSettingsForText.Add(settingsTextFour);
+
+			Random RandomSettings = new Random();
 			foreach (string filepath in FilePaths)
 			{
-				ImageProcessor(filepath);
+				string filepathCorrected = filepath.TrimStart('o', 'u', 't', 'p', 'u', 't', '/');
+				string textAdded = $"text added/{filepathCorrected}";
+				var pathToBackgroundImage = filepath;
+				var pathToNewImage = textAdded;
+				var textToWrite = "Done with ImageMagick";
+
+				// These settings will create a new caption
+				// which automatically resizes the text to best
+				// fit within the box.
+				
+					var settings = listOfSettingsForText[RandomSettings.Next(listOfSettingsForText.Count)];
+
+					using (var image = new MagickImage(pathToBackgroundImage))
+					{
+						using (var caption = new MagickImage($"caption:{textToWrite}", settings))
+						{
+							// Add the caption layer on top of the background image
+
+							var size = new MagickGeometry(1280, 720);
+							image.Composite(caption, 1, 200, CompositeOperator.Over);
+							image.Composite(caption, 600, 50, CompositeOperator.Over);
+							image.Composite(caption, 1200, 100, CompositeOperator.Over);
+							image.Composite(caption, 100, 700, CompositeOperator.Over);
+							image.Resize(size);
+							image.Write(pathToNewImage);
+
+						}
+
+					}
+
 			}
+
 
 		}
 
@@ -47,50 +137,10 @@ namespace BTC_Prototype
 			{
 				engine.GetMetadata(inputFile);
 
-				// selects where to save the image
 				var options = new ConversionOptions { Seek = TimeSpan.FromSeconds(intervalBetweenPictures) };
 
 				// fetches image, creates it.
 				engine.GetThumbnail(inputFile, outputFile, options);
-
-			}
-
-		}
-
-		public static void ImageProcessor(string file)
-		{
-			byte[] photoBytes = File.ReadAllBytes(file);
-
-			// Format is automatically detected though can be changed.
-			ISupportedImageFormat format = new JpegFormat { Quality = 70 };
-
-			Size size = new Size(1280, 720);
-			file = file.TrimStart('o', 'u', 't', 'p', 'u', 't', '/');
-			string textAdded = $"text added/{file}";
-			using (MemoryStream inStream = new MemoryStream(photoBytes))
-			{
-				using (MemoryStream outStream = new MemoryStream())
-				{
-					// Initialize the ImageFactory using the overload to preserve EXIF metadata.
-					using (ImageFactory imageFactory = new ImageFactory(preserveExifData: true))
-					{
-						// Load, resize, set the format and quality and save an image.
-						imageFactory.Load(inStream)
-									.Resize(size)
-									.Format(format)
-									.Watermark(new TextLayer()
-									{
-										DropShadow = true,
-										FontFamily = FontFamily.GenericMonospace,
-										Text = "BTC Proto",
-										FontSize = 400,
-										Style = FontStyle.Bold,
-										FontColor = Color.GreenYellow
-									})
-									.Save(textAdded);
-					}
-
-				}
 
 			}
 
