@@ -32,16 +32,17 @@ namespace BTC_Prototype
 
 			List<MagickReadSettings> listOfSettingsForText = new List<MagickReadSettings>();
 
+
 			var settingsTextOne = new MagickReadSettings
 			{
 				Font = "italic",
-				FillColor = MagickColors.ForestGreen,
-				StrokeColor = MagickColors.LimeGreen,
+				FillColor = MagickColors.Tan,
+				StrokeColor = MagickColors.Tan,
 				FontStyle = FontStyleType.Bold,
-				TextGravity = Gravity.Center,
+				FontPointsize= 80,
 				BackgroundColor = MagickColors.Transparent,
-				Height = 250, // height of text box
-				Width = 200, // width of text box
+				Height = 850, // height of text box
+				Width = 1000, // width of text box
 
 			};
 
@@ -52,11 +53,11 @@ namespace BTC_Prototype
 				Font = "italic",
 				FillColor = MagickColors.PaleGoldenrod,
 				StrokeColor = MagickColors.LimeGreen,
+				FontPointsize= 50,
 				FontStyle = FontStyleType.Bold,
-				TextGravity = Gravity.Center,
-				BackgroundColor = MagickColors.Transparent,
+				BackgroundColor = MagickColors.BlueViolet,
 				Height = 250, // height of text box
-				Width = 200, // width of text box
+				Width = 1000, // width of text box
 
 			};
 
@@ -67,11 +68,12 @@ namespace BTC_Prototype
 				Font = "italic",
 				FillColor = MagickColors.Orange,
 				StrokeColor = MagickColors.LimeGreen,
+				StrokeAntiAlias= true,
 				FontStyle = FontStyleType.Oblique,
-				TextGravity = Gravity.Center,
+				FontPointsize= 50,
 				BackgroundColor = MagickColors.Transparent,
 				Height = 250, // height of text box
-				Width = 200, // width of text box
+				Width = 1500, // width of text box
 
 			};
 
@@ -83,10 +85,9 @@ namespace BTC_Prototype
 				FillColor = MagickColors.ForestGreen,
 				StrokeColor = MagickColors.LimeGreen,
 				FontStyle = FontStyleType.Bold,
-				TextGravity = Gravity.Center,
+				BorderColor= MagickColors.Orange,
+				FontPointsize= 100,
 				BackgroundColor = MagickColors.Transparent,
-				Height = 250, // height of text box
-				Width = 200, // width of text box
 
 			};
 
@@ -96,10 +97,9 @@ namespace BTC_Prototype
 			foreach (string filepath in FilePaths)
 			{
 				string filepathCorrected = filepath.TrimStart('o', 'u', 't', 'p', 'u', 't', '/');
-				string textAdded = $"text added/{filepathCorrected}";
+				string textAddedPath = $"text added/{filepathCorrected}";
 				var pathToBackgroundImage = filepath;
-				var pathToNewImage = textAdded;
-				var textToWrite = "Done with ImageMagick";
+				var textToWrite = "Bulk Thumbnail Creator, BTC";
 
 				// These settings will create a new caption
 				// which automatically resizes the text to best
@@ -114,19 +114,15 @@ namespace BTC_Prototype
 							// Add the caption layer on top of the background image
 
 							var size = new MagickGeometry(1280, 720);
-							image.Composite(caption, 1, 200, CompositeOperator.Over);
-							image.Composite(caption, 600, 50, CompositeOperator.Over);
-							image.Composite(caption, 1200, 100, CompositeOperator.Over);
-							image.Composite(caption, 100, 700, CompositeOperator.Over);
+							image.Composite(caption, 50, 100, CompositeOperator.Over);
 							image.Resize(size);
-							image.Write(pathToNewImage);
+							image.Write(textAddedPath);
 
 						}
 
 					}
 
 			}
-
 
 		}
 
