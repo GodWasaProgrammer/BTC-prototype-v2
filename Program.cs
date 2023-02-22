@@ -39,59 +39,15 @@ namespace BTC_Prototype
 				FillColor = MagickColors.Tan,
 				StrokeColor = MagickColors.Tan,
 				FontStyle = FontStyleType.Bold,
-				FontPointsize= 80,
+				FontPointsize= 100,
+				FontWeight = FontWeight.Bold,
 				BackgroundColor = MagickColors.Transparent,
-				Height = 850, // height of text box
-				Width = 1000, // width of text box
-
-			};
-
-			listOfSettingsForText.Add(settingsTextOne);
-
-			var settingsTextTwo = new MagickReadSettings
-			{
-				Font = "italic",
-				FillColor = MagickColors.PaleGoldenrod,
-				StrokeColor = MagickColors.LimeGreen,
-				FontPointsize= 50,
-				FontStyle = FontStyleType.Bold,
-				BackgroundColor = MagickColors.BlueViolet,
-				Height = 250, // height of text box
-				Width = 1000, // width of text box
-
-			};
-
-			listOfSettingsForText.Add(settingsTextTwo);
-
-			var settingsTextThree = new MagickReadSettings
-			{
-				Font = "italic",
-				FillColor = MagickColors.Orange,
-				StrokeColor = MagickColors.LimeGreen,
-				StrokeAntiAlias= true,
-				FontStyle = FontStyleType.Oblique,
-				FontPointsize= 50,
-				BackgroundColor = MagickColors.Transparent,
-				Height = 250, // height of text box
+				Height = 1850, // height of text box
 				Width = 1500, // width of text box
 
 			};
 
-			listOfSettingsForText.Add(settingsTextThree);
-
-			var settingsTextFour = new MagickReadSettings
-			{
-				Font = "italic",
-				FillColor = MagickColors.ForestGreen,
-				StrokeColor = MagickColors.LimeGreen,
-				FontStyle = FontStyleType.Bold,
-				BorderColor= MagickColors.Orange,
-				FontPointsize= 100,
-				BackgroundColor = MagickColors.Transparent,
-
-			};
-
-			listOfSettingsForText.Add(settingsTextFour);
+			listOfSettingsForText.Add(settingsTextOne);
 
 			Random RandomSettings = new Random();
 			foreach (string filepath in FilePaths)
@@ -99,7 +55,7 @@ namespace BTC_Prototype
 				string filepathCorrected = filepath.TrimStart('o', 'u', 't', 'p', 'u', 't', '/');
 				string textAddedPath = $"text added/{filepathCorrected}";
 				var pathToBackgroundImage = filepath;
-				var textToWrite = "Bulk Thumbnail Creator, BTC";
+				var textToWrite = "Bulk Thumbnail Creator BTC";
 
 				// These settings will create a new caption
 				// which automatically resizes the text to best
@@ -109,7 +65,7 @@ namespace BTC_Prototype
 
 					using (var image = new MagickImage(pathToBackgroundImage))
 					{
-						using (var caption = new MagickImage($"caption:{textToWrite}", settings))
+						using (var caption = new MagickImage($"label:{textToWrite}", settings))
 						{
 							// Add the caption layer on top of the background image
 
